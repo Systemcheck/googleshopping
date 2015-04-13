@@ -71,16 +71,15 @@ Configuration::deleteByName($this->name.'_domain');
 if (Configuration::get($this->name.'_psdir'))
 Configuration::deleteByName($this->name.'_psdir');
 $this->_setDefaults();
-}
+	}
 $this->displayName = $this->l('Google Base Produkt Feed');
 $this->description = $this->l('Genereriert Ihren Google Shopping Produkt Feed per Mausklick. www.prestacode.de');
 }
 public function install()
 {
-		$this->_setDefaults();
-		return parent::install();
-		
-	}
+	$this->_setDefaults();
+	return parent::install();
+}
 private function _setDefaults()
 {
 	if (!Configuration::get($this->name.'_feedname'))
