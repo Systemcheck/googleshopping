@@ -66,46 +66,43 @@ public function __construct()
 	{
 	// deprecated
 	if (Configuration::get($this->name.'_domain'))
-        Configuration::deleteByName($this->name.'_domain');
-        // deprecated
-        if (Configuration::get($this->name.'_psdir'))
-        Configuration::deleteByName($this->name.'_psdir');
-	$this->_setDefaults();
-	}
-	$this->displayName = $this->l('Google Base Produkt Feed');
-	$this->description = $this->l('Genereriert Ihren Google Shopping Produkt Feed per Mausklick. www.prestacode.de');
-	}
+Configuration::deleteByName($this->name.'_domain');
+// deprecated
+if (Configuration::get($this->name.'_psdir'))
+Configuration::deleteByName($this->name.'_psdir');
+$this->_setDefaults();
+}
+$this->displayName = $this->l('Google Base Produkt Feed');
+$this->description = $this->l('Genereriert Ihren Google Shopping Produkt Feed per Mausklick. www.prestacode.de');
+}
 public function install()
-  {
-    $this->_setDefaults();
-    return parent::install();
-  }
-
-  private function _setDefaults()
-  {
-      if (!Configuration::get($this->name.'_feedname'))
-      Configuration::updateValue($this->name.'_feedname', 'Gase Center Calau');
-      if (!Configuration::get($this->name.'_feedcategory'))
-      Configuration::updateValue($this->name.'_feedcategory', 'Bauteile &gt; Werkzeuge &gt; Toolsets &gt; Elektrowerkzeug-Combo-Sets');
-      if (!Configuration::get($this->name.'_description'))
-      Configuration::updateValue($this->name.'_description', '****Type some text to describe your shop before generating your first feed****');
-      if (!Configuration::get($this->name.'_lang'))
-        Configuration::updateValue($this->name.'_lang', $this->_cookie->id_lang);
-      if (!Configuration::get($this->name.'_gtin'))
-        Configuration::updateValue($this->name.'_gtin', 'ean13');
-      if (!Configuration::get($this->name.'_use_supplier'))
-        Configuration::updateValue($this->name.'_use_supplier', 1);
-      if (!Configuration::get($this->name.'_currency'))
-        Configuration::updateValue($this->name.'_currency', (int)Configuration::get('PS_CURRENCY_DEFAULT'));
-      if (!Configuration::get($this->name.'_condition'))
-        Configuration::updateValue($this->name.'_condition', 'new');
-
-      $this->_getGlobals();
-
-      if (!Configuration::get($this->name.'_filepath'))
-        Configuration::updateValue($this->name.'_filepath', addslashes($this->defaultOutputFile()));
-
-      $this->_nearby = false;
+	{
+		$this->_setDefaults();
+		return parent::install();
+		
+	}
+private function _setDefaults()
+{
+	if (!Configuration::get($this->name.'_feedname'))
+	Configuration::updateValue($this->name.'_feedname', 'Gase Center Calau');
+	if (!Configuration::get($this->name.'_feedcategory'))
+	Configuration::updateValue($this->name.'_feedcategory', 'Bauteile &gt; Werkzeuge &gt; Toolsets &gt; Elektrowerkzeug-Combo-Sets');
+	if (!Configuration::get($this->name.'_description'))
+	Configuration::updateValue($this->name.'_description', '****Type some text to describe your shop before generating your first feed****');
+	if (!Configuration::get($this->name.'_lang'))
+	Configuration::updateValue($this->name.'_lang', $this->_cookie->id_lang);
+	if (!Configuration::get($this->name.'_gtin'))
+	Configuration::updateValue($this->name.'_gtin', 'ean13');
+	if (!Configuration::get($this->name.'_use_supplier'))
+  	Configuration::updateValue($this->name.'_use_supplier', 1);
+	if (!Configuration::get($this->name.'_currency'))
+	Configuration::updateValue($this->name.'_currency', (int)Configuration::get('PS_CURRENCY_DEFAULT'));
+	if (!Configuration::get($this->name.'_condition'))
+	Configuration::updateValue($this->name.'_condition', 'new');
+	$this->_getGlobals();
+	if (!Configuration::get($this->name.'_filepath'))
+	Configuration::updateValue($this->name.'_filepath', addslashes($this->defaultOutputFile()));
+	$this->_nearby = false;
   }
 
   private function _getGlobals()
