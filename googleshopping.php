@@ -37,7 +37,6 @@ private $_cookie;
 private $_compat;
 private $_warnings;
 private $_mod_errors;
-
 private $xml_description;
 private $psdir;
 private $id_lang;
@@ -49,45 +48,34 @@ private $gtin_field;
 private $use_supplier;
 private $nearby;
 public $item_data = '';
-  
 public function __construct()
-{
-	
-
-$version_mask = explode('.', _PS_VERSION_, 2);
-
-$this->_compat = (int)implode('', $version_mask);
-    
-$this->_warnings = array();
-$this->_mod_errors = array();
-
+	{
+	$version_mask = explode('.', _PS_VERSION_, 2);
+	$this->_compat = (int)implode('', $version_mask);
+	$this->_warnings = array();
+	$this->_mod_errors = array();
 	$this->name = 'googleshopping';
 	$this->tab = 'advertising_marketing';
 	$this->author = 'www.prestacode.de';
 	$this->version = '1.1.3';
 	$this->module_key = 'bd10bbdb995398cf1fb81f61c63f54c3';
-
-		parent::__construct();
-
-		// Set default config values if they don't already exist (here for compatibility in case the user doesn't uninstall/install at upgrade)
-    // Also set global "macro" data for the feed and check for store configuration changes
-    if ($this->isInstalled($this->name))
-    {
-      // deprecated
-      if (Configuration::get($this->name.'_domain'))
+	parent::__construct();
+// Set default config values if they don't already exist (here for compatibility in case the user doesn't uninstall/install at upgrade)
+// Also set global "macro" data for the feed and check for store configuration changes
+	if ($this->isInstalled($this->name))
+	{
+	// deprecated
+	if (Configuration::get($this->name.'_domain'))
         Configuration::deleteByName($this->name.'_domain');
-      // deprecated
-      if (Configuration::get($this->name.'_psdir'))
+        // deprecated
+        if (Configuration::get($this->name.'_psdir'))
         Configuration::deleteByName($this->name.'_psdir');
-
-      $this->_setDefaults();
-    }
-
-		$this->displayName = $this->l('Google Base Produkt Feed');
-		$this->description = $this->l('Genereriert Ihren Google Shopping Produkt Feed per Mausklick. www.prestacode.de');
+	$this->_setDefaults();
 	}
-
-  public function install()
+	$this->displayName = $this->l('Google Base Produkt Feed');
+	$this->description = $this->l('Genereriert Ihren Google Shopping Produkt Feed per Mausklick. www.prestacode.de');
+	}
+public function install()
   {
     $this->_setDefaults();
     return parent::install();
