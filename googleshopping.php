@@ -140,7 +140,7 @@ private function directory()
 
 private function winFixFilename($file)
 {
-	return str_replace('\\\\' , '\\' , $file);
+	return str_replace('\\\\', '\\', $file);
 }
 
 private function defaultOutputFile()
@@ -181,16 +181,16 @@ if ($row)
   }
 
   static private $cacheCatPath = array();
-  private function getPath($id_cat)
-	{
-    if (!isset(self::$cacheCatPath[$id_cat]))
-      self::$cacheCatPath[$id_cat] = $this->_getPath($id_cat);
+private function getPath($id_cat)
+{
+if (!isset(self::$cacheCatPath[$id_cat]))
+self::$cacheCatPath[$id_cat] = $this->_getPath($id_cat);
 
     return self::$cacheCatPath[$id_cat];
-  }
+}
 
-  private function _getPath($id_category, $path = '')
-  {
+private function _getPath($id_category, $path = '')
+{
     $category = new Category(intval($id_category), intval(Configuration::get($this->name.'_lang')));
 
 		if (!Validate::isLoadedObject($category))
@@ -200,9 +200,9 @@ if ($row)
 			return $this->_xmlentities($path);
 
 		$pipe = ' > ';
-    $path='';
+    $path = '';
 		if ($path != @$category_name)
-			$path = $category_name.($path!='' ? $pipe.$path : '');
+			$path = $category_name.($path != '' ? $pipe.$path : '');
 
 		return $this->_getPath(intval($category->id_parent), $path);
 	}
@@ -211,14 +211,14 @@ if ($row)
 	{
 		$filename = $this->winFixFilename(Configuration::get($this->name.'_filepath'));
 		$root_path = realpath($this->directory());
-		$file = str_replace($root_path, '' , $filename);
+		$file = str_replace($root_path,'' , $filename);
 
 		$separator = '';
 
 		if (Tools::substr($file, 0, 1) == '\\')
 			Tools::substr_replace($file, '/', 0, 1);
 
-		if (Tools::substr($file, 0, 1)!='/')
+		if (Tools::substr($file, 0, 1) != '/')
 			$separator = '/';
 
 		return 'http://'.$_SERVER['HTTP_HOST'].$separator.$file;
@@ -334,17 +334,17 @@ if ($row)
     if ((int)@$this->compat > 13)
       $item_data .= $this->_xmlElement('g:condition', $this->_getCompatibleCondition($product['condition']));
     else
-      $item_data .= $this->_xmlElement('g:condition',$this->_getCompatibleCondition($this->default_condition));
+      $item_data .= $this->_xmlElement('g:condition', $this->_getCompatibleCondition($this->default_condition));
 
     // 2. Availability & Price
-    $item_data .= $this->_xmlElement('g:availability',$this->getAvailability($product['quantity']));
+    $item_data .= $this->_xmlElement('g:availability', $this->getAvailability($product['quantity']));
     // Price is WITHOUT any reduction
     $price = $this->_getCompatiblePrice($product['id_product']);
     $item_data .= $this->_xmlElement('g:price', $price);
     // TODO: If there is an active discount, then include it
     $price_with_reduction = $this->_getCompatibleSalePrice($product['id_product']);
     if ($price_with_reduction !== $price)
-      $item_data .= $this->_xmlElement('g:sale_price',$price_with_reduction);
+      $item_data .= $this->_xmlElement('g:sale_price', $price_with_reduction);
     /*
     // Effective date is in ISO8601 format TODO: Support "sales" somehow - need a way of returning "expiry date" for the reduction
     $items .= "<g:sale_price_effective_date>".Product::getPriceStatic(intval($product['id_product']))."</g:sale_price_effective_date>\n";
@@ -476,8 +476,8 @@ if ($row)
     return $product_link;
   }
 
-  private function _displayFeed()
-	{
+private function _displayFeed()
+{
 		$filename = $this->winFixFilename(Configuration::get($this->name.'_filepath'));
 		if(file_exists($filename))
 		{
@@ -768,8 +768,8 @@ if ($row)
 		return $tab;
 	}
 
-  public function getLanguages()
-	{
+public function getLanguages()
+{
     $languages = array();
 
     $result = Db::getInstance()->ExecuteS("
@@ -777,9 +777,9 @@ if ($row)
 		FROM `"._DB_PREFIX_."lang` WHERE `active` = '1'");
 
 		foreach ($result AS $row)
-			$languages[(int)($row['id_lang'])] = array('id_lang' => (int)($row['id_lang']), 'name' => $row['name'], 'iso_code' => $row['iso_code'], 'active' => (int)(@$row['active']));
-    return $languages;
-  }
+		$languages[(int)($row['id_lang'])] = array('id_lang' => (int)($row['id_lang']), 'name' => $row['name'], 'iso_code' => $row['iso_code'], 'active' => (int)(@$row['active']));
+return $languages;
+}
 }
 ?>
 
