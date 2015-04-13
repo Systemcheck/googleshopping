@@ -110,7 +110,7 @@ private function _getGlobals()
 $this->xml_description = Configuration::get($this->name.'_description');
 $this->psdir = __PS_BASE_URI__;
 $this->languages = $this->getLanguages();
-$this->id_lang = intval(Configuration::get($this->name.'_lang'));
+$this->id_lang = cast(Configuration::get($this->name.'_lang'));
 $this->lang_iso = Tools::strtolower(Language::getIsoById($this->id_lang));
 if (!isset($this->languages[$this->id_lang]))
 {
@@ -122,7 +122,7 @@ $this->warnings[] = $this->l('Language configuration is invalid - reset to defau
 $this->gtin_field = Configuration::get($this->name.'_gtin');
 $this->use_supplier = Configuration::get($this->name.'_use_supplier');
 $this->currencies = $this->getCurrencies();
-$this->id_currency = intval(Configuration::get($this->name.'_currency'));
+$this->id_currency = cast(Configuration::get($this->name.'_currency'));
 if (!isset($this->currencies[$this->id_currency]))
 {
 Configuration::updateValue($this->name.'_currency', (int)Configuration::get('PS_CURRENCY_DEFAULT'));
@@ -191,7 +191,7 @@ self::$cacheCatPath[$id_cat] = $this->_getPath($id_cat);
 
 private function _getPath($id_category, $path = '')
 {
-    $category = new Category(intval($id_category), intval(Configuration::get($this->name.'_lang')));
+    $category = new Category(cast($id_category), cast(Configuration::get($this->name.'_lang')));
 
 		if (!Validate::isLoadedObject($category))
 			die (Tools::displayError());
@@ -204,7 +204,7 @@ private function _getPath($id_category, $path = '')
 		if ($path != @$category_name)
 			$path = $category_name.($path != '' ? $pipe.$path : '');
 
-		return $this->_getPath(intval($category->id_parent), $path);
+		return $this->_getPath(cast($category->id_parent), $path);
 	}
 
 	private function file_url()
@@ -347,7 +347,7 @@ private function _getPath($id_category, $path = '')
       $item_data .= $this->_xmlElement('g:sale_price', $price_with_reduction);
     /*
     // Effective date is in ISO8601 format TODO: Support "sales" somehow - need a way of returning "expiry date" for the reduction
-    $items .= "<g:sale_price_effective_date>".Product::getPriceStatic(intval($product['id_product']))."</g:sale_price_effective_date>\n";
+    $items .= "<g:sale_price_effective_date>".Product::getPriceStatic(cast($product['id_product']))."</g:sale_price_effective_date>\n";
     */
 
     // 3. Unique Product Identifiers
@@ -386,14 +386,14 @@ private function _getPath($id_category, $path = '')
 
   private function _getCompatiblePrice($id_product, $id_product_attrib = NULL)
   {
-    $price = number_format(Tools::convertPrice(Product::getPriceStatic(intval($id_product), true, $id_product_attrib, 6, NULL, false, false), $this->currencies[$this->id_currency]), 2, '.', '');
+    $price = number_format(Tools::convertPrice(Product::getPriceStatic(cast($id_product), true, $id_product_attrib, 6, NULL, false, false), $this->currencies[$this->id_currency]), 2, '.', '');
 
     return $price.' '.$this->currencies[$this->id_currency]->iso_code;
   }
 
   private function _getCompatibleSalePrice($id_product, $id_product_attrib = NULL)
   {
-    $price = number_format(Tools::convertPrice(Product::getPriceStatic(intval($id_product), true, $id_product_attrib, 6), $this->currencies[$this->id_currency]), 2, '.', '');
+    $price = number_format(Tools::convertPrice(Product::getPriceStatic(cast($id_product), true, $id_product_attrib, 6), $this->currencies[$this->id_currency]), 2, '.', '');
 
     return $price.' '.$this->currencies[$this->id_currency]->iso_code;
   }
