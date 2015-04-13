@@ -49,7 +49,7 @@ private $use_supplier;
 private $nearby;
 public $item_data = '';
 public function __construct()
-	{
+{
 	$version_mask = explode('.', _PS_VERSION_, 2);
 	$this->_compat = (int)implode('', $version_mask);
 	$this->_warnings = array();
@@ -63,7 +63,7 @@ public function __construct()
 // Set default config values if they don't already exist (here for compatibility in case the user doesn't uninstall/install at upgrade)
 // Also set global "macro" data for the feed and check for store configuration changes
 	if ($this->isInstalled($this->name))
-	{
+{
 	// deprecated
 	if (Configuration::get($this->name.'_domain'))
 Configuration::deleteByName($this->name.'_domain');
@@ -76,7 +76,7 @@ $this->displayName = $this->l('Google Base Produkt Feed');
 $this->description = $this->l('Genereriert Ihren Google Shopping Produkt Feed per Mausklick. www.prestacode.de');
 }
 public function install()
-	{
+{
 		$this->_setDefaults();
 		return parent::install();
 		
@@ -94,7 +94,7 @@ private function _setDefaults()
 	if (!Configuration::get($this->name.'_gtin'))
 	Configuration::updateValue($this->name.'_gtin', 'ean13');
 	if (!Configuration::get($this->name.'_use_supplier'))
-  	Configuration::updateValue($this->name.'_use_supplier', 1);
+	Configuration::updateValue($this->name.'_use_supplier', 1);
 	if (!Configuration::get($this->name.'_currency'))
 	Configuration::updateValue($this->name.'_currency', (int)Configuration::get('PS_CURRENCY_DEFAULT'));
 	if (!Configuration::get($this->name.'_condition'))
@@ -103,83 +103,74 @@ private function _setDefaults()
 	if (!Configuration::get($this->name.'_filepath'))
 	Configuration::updateValue($this->name.'_filepath', addslashes($this->defaultOutputFile()));
 	$this->_nearby = false;
-  }
+}
 
-  private function _getGlobals()
-  {
-    $this->xml_description = Configuration::get($this->name.'_description');
-    $this->psdir = __PS_BASE_URI__;
+private function _getGlobals()
+{
+$this->xml_description = Configuration::get($this->name.'_description');
+$this->psdir = __PS_BASE_URI__;
+$this->languages = $this->getLanguages();
+$this->id_lang = intval(Configuration::get($this->name.'_lang'));
+$this->lang_iso = Tools::strtolower(Language::getIsoById($this->id_lang));
+if (!isset($this->languages[$this->id_lang]))
+{
+Configuration::updateValue($this->name.'_lang', (int)$this->_cookie->id_lang);
+$this->id_lang = (int)$this->_cookie->id_lang;
+$this->lang_iso = Tools::strtolower(Language::getIsoById($this->id_lang));
+$this->warnings[] = $this->l('Language configuration is invalid - reset to default.');
+}
+$this->gtin_field = Configuration::get($this->name.'_gtin');
+$this->use_supplier = Configuration::get($this->name.'_use_supplier');
+$this->currencies = $this->getCurrencies();
+$this->id_currency = intval(Configuration::get($this->name.'_currency'));
+if (!isset($this->currencies[$this->id_currency]))
+{
+Configuration::updateValue($this->name.'_currency', (int)Configuration::get('PS_CURRENCY_DEFAULT'));
+$this->id_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
+$this->warnings[] = $this->l('Currency configuration is invalid - reset to default.');
+}
 
-    $this->languages = $this->getLanguages();
-    $this->id_lang = intval(Configuration::get($this->name.'_lang'));
-    $this->lang_iso = Tools::strtolower(Language::getIsoById($this->id_lang));
-    if (!isset($this->languages[$this->id_lang]))
-    {
-      Configuration::updateValue($this->name.'_lang', (int)$this->_cookie->id_lang);
-      $this->id_lang = (int)$this->_cookie->id_lang;
-      $this->lang_iso = Tools::strtolower(Language::getIsoById($this->id_lang));
-      $this->warnings[] = $this->l('Language configuration is invalid - reset to default.');
-    }
+$this->default_condition = Configuration::get($this->name.'_condition');
+}
 
-    $this->gtin_field = Configuration::get($this->name.'_gtin');
+private function directory()
+{
+	return dirname(__FILE__).'/../../'; // move up to the __PS_BASE_URI__ directory
+}
 
-    $this->use_supplier = Configuration::get($this->name.'_use_supplier');
+private function winFixFilename($file)
+{
+	return str_replace('\\\\','\\',$file);
+}
 
-    $this->currencies = $this->getCurrencies();
-    $this->id_currency = intval(Configuration::get($this->name.'_currency'));
-    if (!isset($this->currencies[$this->id_currency]))
-    {
-      Configuration::updateValue($this->name.'_currency', (int)Configuration::get('PS_CURRENCY_DEFAULT'));
-      $this->id_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
-      $this->warnings[] = $this->l('Currency configuration is invalid - reset to default.');
-    }
+private function defaultOutputFile()
+{
+	// PHP on windows seems to return a trailing '\' where as on unix it doesn't
+	$output_dir = realpath($this->directory());
+	$dir_separator = '/';
+	// If there's a windows directory separator on the end,
+	// then don't add the unix one too when building the final output file
+	if (Tools::substr($output_dir, -1, 1)=='\\')
+	$dir_separator = '';
+	$output_file = $output_dir.$dir_separator.$this->lang_iso.'_'.Tools::strtolower($this->currencies[$this->id_currency]->iso_code).'_googlebase.xml';
+	return $output_file;
+}
 
-    $this->default_condition = Configuration::get($this->name.'_condition');
-  }
-
-	private function directory()
-	{
-		return dirname(__FILE__).'/../../'; // move up to the __PS_BASE_URI__ directory
-	}
-
-
-	private function winFixFilename($file)
-	{
-		return str_replace('\\\\','\\',$file);
-	}
-
-	private function defaultOutputFile()
-	{
-		// PHP on windows seems to return a trailing '\' where as on unix it doesn't
-		$output_dir = realpath($this->directory());
-		$dir_separator = '/';
-
-		// If there's a windows directory separator on the end,
-		// then don't add the unix one too when building the final output file
-		if (Tools::substr($output_dir, -1, 1)=='\\')
-			$dir_separator = '';
-
-		$output_file = $output_dir.$dir_separator.$this->lang_iso.'_'.Tools::strtolower($this->currencies[$this->id_currency]->iso_code).'_googlebase.xml';
-		return $output_file;
-	}
-
-
-  static private $cacheCat = array();
-  private function _getrawCatRewrite($id_cat)
-  {
-   if (!isset(self::$cacheCat[$id_cat]))
-    {
-       $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow("
-        SELECT `link_rewrite`
-        FROM `"._DB_PREFIX_."category_lang`
-        WHERE `id_category` = '".(int)($id_cat)."' AND
-        `id_lang` = '".(int)$this->id_lang."'");
-
-       if ($row)
-       {
-        self::$cacheCat[$id_cat] = $row['link_rewrite'];
-        return self::$cacheCat[$id_cat];
-       }
+static private $cacheCat = array();
+private function _getrawCatRewrite($id_cat)
+{
+if (!isset(self::$cacheCat[$id_cat]))
+{
+	$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow("
+	SELECT `link_rewrite`
+	FROM `"._DB_PREFIX_."category_lang`
+	WHERE `id_category` = '".(int)($id_cat)."' AND
+	`id_lang` = '".(int)$this->id_lang."'");
+if ($row)
+{
+	self::$cacheCat[$id_cat] = $row['link_rewrite'];
+	return self::$cacheCat[$id_cat];
+}
        else
        {
         self::$cacheCat[$id_cat] = '';
