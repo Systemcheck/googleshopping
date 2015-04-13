@@ -24,7 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-
 if (!defined('_PS_VERSION_'))
 exit;
 include_once('./classes/Cookie.php');
@@ -53,20 +52,20 @@ public $item_data = '';
   
 public function __construct()
 {
-		
+	
 
-  $version_mask = explode('.', _PS_VERSION_, 2);
+$version_mask = explode('.', _PS_VERSION_, 2);
 
-  $this->_compat = (int)implode('', $version_mask);
+$this->_compat = (int)implode('', $version_mask);
     
-    $this->_warnings = array();
-    $this->_mod_errors = array();
+$this->_warnings = array();
+$this->_mod_errors = array();
 
-		$this->name = 'googleshopping';
-		$this->tab = 'advertising_marketing';
-    $this->author = 'www.prestacode.de';
-		$this->version = '1.1.3';
-    $this->module_key = 'bd10bbdb995398cf1fb81f61c63f54c3';
+	$this->name = 'googleshopping';
+	$this->tab = 'advertising_marketing';
+	$this->author = 'www.prestacode.de';
+	$this->version = '1.1.3';
+	$this->module_key = 'bd10bbdb995398cf1fb81f61c63f54c3';
 
 		parent::__construct();
 
