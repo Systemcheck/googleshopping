@@ -140,7 +140,7 @@ private function directory()
 
 private function winFixFilename($file)
 {
-	return str_replace('\\\\','\\',$file);
+	return str_replace('\\\\' , '\\' , $file);
 }
 
 private function defaultOutputFile()
@@ -150,7 +150,7 @@ private function defaultOutputFile()
 	$dir_separator = '/';
 	// If there's a windows directory separator on the end,
 	// then don't add the unix one too when building the final output file
-	if (Tools::substr($output_dir, -1, 1)=='\\')
+	if (Tools::substr($output_dir, -1, 1) == '\\')
 	$dir_separator = '';
 	$output_file = $output_dir.$dir_separator.$this->lang_iso.'_'.Tools::strtolower($this->currencies[$this->id_currency]->iso_code).'_googlebase.xml';
 	return $output_file;
@@ -211,11 +211,11 @@ if ($row)
 	{
 		$filename = $this->winFixFilename(Configuration::get($this->name.'_filepath'));
 		$root_path = realpath($this->directory());
-		$file = str_replace($root_path,'', $filename);
+		$file = str_replace($root_path, '' , $filename);
 
 		$separator = '';
 
-		if (Tools::substr($file, 0, 1)=='\\')
+		if (Tools::substr($file, 0, 1) == '\\')
 			Tools::substr_replace($file, '/', 0, 1);
 
 		if (Tools::substr($file, 0, 1)!='/')
@@ -314,11 +314,11 @@ if ($row)
 
     // 1. Basic Product Information
 
-    $item_data .= $this->_xmlElement('g:id',"pc".$this->lang_iso."-".$product['id_product']);
-    $item_data .= $this->_xmlElement('title',$product['name'], true);
-    $item_data .= $this->_xmlElement('description','<![CDATA['.$product['description_short'].']]>');
-    $item_data .= $this->_xmlElement('g:google_product_category',Tools::getValue('feedcategory', Configuration::get($this->name.'_feedcategory')));
-    $item_data .= $this->_xmlElement('g:product_type',$this->getPath($product['id_category_default']));
+    $item_data .= $this->_xmlElement('g:id', "pc".$this->lang_iso."-".$product['id_product']);
+    $item_data .= $this->_xmlElement('title', $product['name'], true);
+    $item_data .= $this->_xmlElement('description', '<![CDATA['.$product['description_short'].']]>');
+    $item_data .= $this->_xmlElement('g:google_product_category', Tools::getValue('feedcategory', Configuration::get($this->name.'_feedcategory')));
+    $item_data .= $this->_xmlElement('g:product_type', $this->getPath($product['id_category_default']));
     $item_data .= $this->_xmlElement('g:shipping', '<g:country>DE</g:country>
    <g:service>Standard</g:service>
    <g:price>4.00 EUR</g:price>');
@@ -326,11 +326,11 @@ if ($row)
    $item_data .= $this->_xmlElement('g:adwords_redirect', $product_link);
 
     
-    $item_data .= $this->_xmlElement('link',$product_link);
+    $item_data .= $this->_xmlElement('link', $product_link);
     if ($image_links[0]['valid'] == 1)
-      $item_data .= $this->_xmlElement('g:image_link',$image_links[0]['link']);
+      $item_data .= $this->_xmlElement('g:image_link', $image_links[0]['link']);
     if ($image_links[1]['valid'] == 1)
-      $item_data .= $this->_xmlElement('g:additional_image_link',$image_links[1]['link']);
+      $item_data .= $this->_xmlElement('g:additional_image_link', $image_links[1]['link']);
     if ((int)@$this->compat > 13)
       $item_data .= $this->_xmlElement('g:condition', $this->_getCompatibleCondition($product['condition']));
     else
